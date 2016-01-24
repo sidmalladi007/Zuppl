@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="utf-8" /> 
+    <meta name="description" content="Zuppl Homepage">
+    {% load staticfiles %}
+    <link rel="stylesheet" type="text/css" href="{% static 'zuppl/css/bootstrap-theme.css' %}" />
+    <link rel="stylesheet" type="text/css" href="{% static 'zuppl/css/bootstrap-theme.css.map' %}" />
+    <link rel="stylesheet" type="text/css" href="{% static 'zuppl/css/bootstrap-theme.min.css' %}" />
+    <link rel="stylesheet" type="text/css" href="{% static 'zuppl/css/bootstrap.css.map' %}" />
+    <link rel="stylesheet" type="text/css" href="{% static 'zuppl/css/bootstrap.min.css' %}" />
+    <link rel="stylesheet" type="text/css" href="{% static 'zuppl/css/bootstrap.css' %}" />
+    <link rel="stylesheet" type="text/css" href="{% static 'zuppl/css/main.css' %}" />
+    <title>Zuppl Homepage</title>
+  </head>
+
+  <body>
+    <div class="container">
+        <ul class="nav nav-tabs pull-left">
+          <li class="active"><a href="{% url 'zuppl:index' %}">Zuppl</a></li>
+        </ul>
+        <ul class="nav nav-tabs pull-right">
+          {% if user.is_authenticated %}
+          <li><a href="{% url 'zuppl:trends' %}">Explore</a></li>
+          {% else %}
+          <li><a href="{% url 'zuppl:login' %}">Explore</a></li>
+          {% endif %}
+          {% if user.is_authenticated %}
+          <li><a href="{% url 'zuppl:create' %}">Create</a></li>
+          {% else %}
+          <li><a href="{% url 'zuppl:login' %}">Create</a></li>
+          {% endif %}
+          {% if user.is_authenticated %}
+          <li><a href="{% url 'zuppl:profile' %}">Profile</a></li>
+          {% else %}
+          <li><a href="{% url 'zuppl:login' %}">Profile</a></li>
+          {% endif %}
+          {% if user.is_authenticated %}
+          <li><a href="{% url 'zuppl:logout' %}">Sign Out</a></li>
+          {% else %}
+          <li><a href="{% url 'zuppl:login' %}">Sign In</a></li>
+          {% endif %}
+        </ul>
+    </div>
+
+    <div class="jumbotron">
+      <div class="container">
+        <h1>Create and discover trending events on your college campus.</h1>
+        <p>Checking out hot events means meeting new people, cherishing new experiences, and having lots of fun.</p>
+        {% if not user.is_authenticated %}
+        <a href="{% url 'zuppl:signup' %}" type="button" class="btn btn-primary">Sign Up</a>
+        {% endif %}
+      </div>
+    </div>
+
+    </div>
+    <div class="learn-more">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-4">
+            <h2 align="center" class="index-title">Discover</h3>
+            <div class="thumbnail">
+                <img src="{% static 'zuppl/images/image1.jpg' %}" alt="Discover" class="img-rounded" width="304" height="236"/>
+            </div>
+            <p class="home-text">Always keep tabs on the campus buzz my discovering trends in real time. Keep track of how popular each event is, who is going, how much it costs, and more!</p>
+          </div>
+          <div class="col-md-4">
+            <h2 align="center" class="index-title">Create and Share</h3>
+            <div class="thumbnail">
+                <img src="{% static 'zuppl/images/image2.jpg' %}" class="img-rounded" alt="Create and Share" width="185" height="150">
+            </div>
+            <p class="home-text">All Zuppl events are created by people just like you -- enthusiastic college students, campus organizations, fraternities, sororities, etc. Want to spread the word about your next big event? Zuppl is the way to go.</p>
+          </div>
+          <div class="col-md-4">
+            <h2 align="center" class="index-title">Organize</h3>
+            <div class="thumbnail">
+                <img src="{% static 'zuppl/images/image3.jpg' %}" class="img-rounded" alt="Organize" width="280" height="236">
+            </div>
+            <p class="home-text">Efficiently keep track of all the events that you create. Edit its details, monitor how many people are attending, and plan out your fun time. You can also organize the events to which you've RSVPed by date. All in one neat layout.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+
+</html>

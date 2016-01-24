@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="utf-8" /> 
+    <meta name="description" content="Create Zuppl">
+    {% load staticfiles %}
+    <link rel="stylesheet" type="text/css" href="{% static 'zuppl/css/bootstrap-theme.css' %}" />
+    <link rel="stylesheet" type="text/css" href="{% static 'zuppl/css/bootstrap-theme.css.map' %}" />
+    <link rel="stylesheet" type="text/css" href="{% static 'zuppl/css/bootstrap-theme.min.css' %}" />
+    <link rel="stylesheet" type="text/css" href="{% static 'zuppl/css/bootstrap.css.map' %}" />
+    <link rel="stylesheet" type="text/css" href="{% static 'zuppl/css/bootstrap.min.css' %}" />
+    <link rel="stylesheet" type="text/css" href="{% static 'zuppl/css/bootstrap.css' %}" />
+    <link rel="stylesheet" type="text/css" href="{% static 'zuppl/css/main.css' %}" />
+    <script type="text/javascript" src="{% static 'zuppl/js/bootstrap.js' %}"></script>
+    <script type="text/javascript" src="{% static 'zuppl/js/bootstrap.min.js' %}"></script> 
+    <script type="text/javascript" src="{% static 'zuppl/js/npm.js' %}"></script>
+    <script type="text/javascript" src="{% static 'zuppl/js/interaction.js' %}"></script> 
+    <title>Create Zuppl</title>
+  </head>
+
+  <body>
+
+    <div class="container">
+        <ul class="nav nav-tabs pull-left">
+          <li><a href="{% url 'zuppl:index' %}">Zuppl</a></li>
+        </ul>
+        <ul class="nav nav-tabs pull-right">
+          {% if user.is_authenticated %}
+          <li><a href="{% url 'zuppl:trends' %}">Explore</a></li>
+          {% else %}
+          <li><a href="{% url 'zuppl:login' %}">Explore</a></li>
+          {% endif %}
+          {% if user.is_authenticated %}
+          <li class="active"><a href="{% url 'zuppl:create' %}">Create</a></li>
+          {% else %}
+          <li class="active"><a href="{% url 'zuppl:login' %}">Create</a></li>
+          {% endif %}
+          {% if user.is_authenticated %}
+          <li><a href="{% url 'zuppl:profile' %}">Profile</a></li>
+          {% else %}
+          <li><a href="{% url 'zuppl:login' %}">Profile</a></li>
+          {% endif %}
+          {% if user.is_authenticated %}
+          <li><a href="{% url 'zuppl:logout' %}">Sign Out</a></li>
+          {% else %}
+          <li><a href="{% url 'zuppl:login' %}">Sign In</a></li>
+          {% endif %}
+        </ul>
+    </div>
+
+    {% if missed_field %}
+        <div class="container">
+            <h3 align="center" class="create-text">Please fill out all fields to create a Zuppl.</p>
+        </div>
+    {% else %}
+    <div class="container">
+        <h3 align="center" class="create-head">Create an event just for your college campus! Share it with friends to make it a Trending Zuppl.</h3>
+        <p align="center" class="create-text">As the event creator, you can come back to edit your Zuppl at any time.</p>
+    </div>
+    {% endif %}
+
+    <div class="container">
+      <div class="row">
+        <div class="col-md-6 col-md-offset-3">
+          <div class="panel panel-login">
+            <div class="panel-heading">
+              <div class="row">
+                <div class="col-xs-12">
+                  <h3 align="center">Create Zuppl<h3>
+                </div>
+              </div>
+              <hr>
+            </div>
+            <div class="panel-body">
+              <div class="row">
+                <div class="col-lg-12">
+                  <form id="register-form" action="{% url 'zuppl:add-zuppl' %}" method="post" role="form" style="display: block;">
+                  {% csrf_token %}
+                    <div class="form-group">
+                      <label for="name">Event Name</label>
+                      <input type="text" name="eventname" id="eventname" tabindex="1" class="form-control" placeholder="Name" value="">
+                    </div>
+                    <div class="form-group">
+                      <label for="location">Location</label>
+                      <input type="text" name="location" id="location" tabindex="1" class="form-control" placeholder="Event Place, Address, or Landmark" value="">
+                    </div>
+                    <div class="form-group">
+                      <label for="starting">Starts at:</label>
+                      <input type="datetime-local" name="starting" id="starting" tabindex="1" class="form-control">
+                    </div>
+                    <div class="form-group">
+                      <label for="ending">Ends at:</label>
+                      <input type="datetime-local" name="ending" id="ending" tabindex="1" class="form-control">
+                    </div>
+                    <div class="form-group">
+                      <label for="price">Price</label>
+                      <input type="text" name="price" id="price" tabindex="1" class="form-control" placeholder="Eg: $5, Free" value="">
+                    </div>
+                    <div class="form-group">
+                      <label for="organizer">Organized by:</label>
+                      <input type="text" name="organizer" id="organizer" tabindex="2" class="form-control" placeholder="Organizer's Name">
+                    </div>
+                    <div class="form-group">
+                      <label for="organizer_email">Organizer's Email</label>
+                      <input type="email" name="organizer_email" id="organizer_email" tabindex="2" class="form-control" placeholder="Enter contact email">
+                    </div>
+                    <div class="form-group">
+                      <label for="details">Details</label>
+                      <textarea type="textarea" name="details" id="details" tabindex="2" rows="4" cols="60" class="form-control" placeholder="Enter additional information here"></textarea>
+                    </div>
+                    <div class="form-group">
+                      <div class="row">
+                        <div class="col-sm-6 col-sm-offset-3">
+                          <input type="submit" name="zuppl_submit" id="zuppl_submit" tabindex="4" class="form-control btn btn-primary" value="Create Zuppl">
+                        </div>
+                      </div>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

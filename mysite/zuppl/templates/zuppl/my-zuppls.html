@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="utf-8" /> 
+    <meta name="description" content="My Zuppls">
+    {% load staticfiles %}
+    <link rel="stylesheet" type="text/css" href="{% static 'zuppl/css/bootstrap-theme.css' %}" />
+    <link rel="stylesheet" type="text/css" href="{% static 'zuppl/css/bootstrap-theme.css.map' %}" />
+    <link rel="stylesheet" type="text/css" href="{% static 'zuppl/css/bootstrap-theme.min.css' %}" />
+    <link rel="stylesheet" type="text/css" href="{% static 'zuppl/css/bootstrap.css.map' %}" />
+    <link rel="stylesheet" type="text/css" href="{% static 'zuppl/css/bootstrap.min.css' %}" />
+    <link rel="stylesheet" type="text/css" href="{% static 'zuppl/css/bootstrap.css' %}" />
+    <link rel="stylesheet" type="text/css" href="{% static 'zuppl/css/main.css' %}" />
+    <title>My Zuppls</title>
+  </head>
+
+  <body>
+    <div class="container">
+        <ul class="nav nav-tabs pull-left">
+          <li><a href="{% url 'zuppl:index' %}">Zuppl</a></li>
+        </ul>
+        <ul class="nav nav-tabs pull-right">
+          {% if user.is_authenticated %}
+          <li><a href="{% url 'zuppl:trends' %}">Explore</a></li>
+          {% else %}
+          <li><a href="{% url 'zuppl:login' %}">Explore</a></li>
+          {% endif %}
+          {% if user.is_authenticated %}
+          <li><a href="{% url 'zuppl:create' %}">Create</a></li>
+          {% else %}
+          <li><a href="{% url 'zuppl:login' %}">Create</a></li>
+          {% endif %}
+          {% if user.is_authenticated %}
+          <li class="active"><a href="{% url 'zuppl:profile' %}">Profile</a></li>
+          {% else %}
+          <li class="active"><a href="{% url 'zuppl:login' %}">Profile</a></li>
+          {% endif %}
+          {% if user.is_authenticated %}
+          <li><a href="{% url 'zuppl:logout' %}">Sign Out</a></li>
+          {% else %}
+          <li><a href="{% url 'zuppl:login' %}">Sign In</a></li>
+          {% endif %}
+        </ul>
+    </div>
+
+  <div class="container">
+  <br><br><br><br>
+    <div class="row">
+      <div class="col-md-4 col-md-offset-4">
+        <ul class="nav nav-pills">
+          {% if myEvents %}
+          <li class="active"><a href="{% url 'zuppl:my-events' %}">My Events</a></li>
+          <li><a href="{% url 'zuppl:attending-events' %}">Attending Events</a></li>
+          {% elif attendingEvents %}
+          <li><a href="{% url 'zuppl:my-events' %}">My Events</a></li>
+          <li class="active"><a href="{% url 'zuppl:attending-events' %}">Attending Events</a></li>
+          {% endif %}
+        </ul>
+      </div>
+    </div>
+  <br><br>
+
+    {% if leftEvent %}
+      <h2 align="center">You have successfully unfollowed and left the event.</h2>
+      <hr>
+    {% elif addedEvent %}
+      <h2 align="center">You have successfully followed and RSVPed to the event.</h2>
+      <hr>
+    {% endif %}
+
+    {% if noMyEvents %}
+      <h2 align="center">You have not created any Zuppls yet. <a href="{% url 'zuppl:create' %}">Click here</a> to create one.</h2>
+    {% elif noAttendingEvents %}
+      <h2 align="center">You have not RSVPed to any Zuppls. <a href="{% url 'zuppl:trends' %}">Click here</a> to discover events on your campus.</h2>
+    {% endif %}
+
+    {% for event in events %}
+    <div class="zuppl-card">
+      <div class="row">
+        <div class="col-md-8 col-md-offset-2 draw-card-red">
+      <div class="row">
+        <div class="col-md-6 col-md-offset-3">
+          <h2 align="center"><a href="{% url 'zuppl:detail' event.id %}">{{event.name}}</a></h2>
+          <p align="center">Organized by {{event.organizer}}</p>
+        </div>
+        {% if event.created_by == user.get_full_name %}
+        <div class="col-md-2 col-md-offset-1">
+          <a href="{% url 'zuppl:edit-page' event.id %}" class="btn btn-default" role="button">Edit Zuppl</a>
+        </div>
+        {% endif %}
+      </div>
+      <hr>
+      <div class="row">
+        <div class="col-md-3">
+          <h3 style="text-decoration:underline" align="center">Location</h3>
+          <p align="center">{{event.location}}</p>
+        </div>
+        <div class="col-md-6">
+          <h3 style="text-decoration:underline" align="center">Time</h3>
+          <p align="center">From: {{event.start_time}}</p>
+          <p align="center">To: {{event.end_time}}</p>
+        </div>
+        <div class="col-md-3">
+          <h3 style="text-decoration:underline" align="center">Cost</h3>
+          <p align="center">{{event.cost}}</p>
+        </div>
+      </div>
+      <hr>
+      <div class="row">
+        <div class="col-md-10 col-md-offset-1">
+          <h3 style="text-decoration:underline" align="center">Details</h3>
+          <p align="center">{{event.details}}</p>
+        </div>
+      </div>
+      <hr>
+      <div class="row">
+        <div class="col-md-12">
+          <p>Who's Going: </p> {% for attendee in event.attendees.all %} {{attendee.user.get_full_name}}, {% endfor %}</p>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-12">
+          <p style="font-size:12px;"><i>Event created on: {{event.created_date}}</i></p>
+        </div>
+      </div>
+      <hr>
+      <div class="row">
+        <div class="col-md-3">
+          {% if user.profile in event.attendees.all %}
+            <a href="{% url 'zuppl:leave' event.id %}" class="btn btn-danger action-item" role="button">Leave Event</a>
+          {% else %}
+            <a href="{% url 'zuppl:attend' event.id %}" class="btn btn-primary action-item" role="button">Attend Event</a>
+          {% endif %}
+        </div>
+        <div class="col-md-3 col-md-offset-1">
+          <a href="{% url 'zuppl:detail' event.id %}" class="btn btn-warning action-item" role="button">View Comments</a>
+        </div>
+        <div class="col-md-3 col-md-offset-1">
+          <a href="mailto:{{ event.organizer_email }}" class="btn btn-info action-item" role="button">Contact Organizer</a>
+        </div>
+      </div>
+    </div>
+    </div>
+    <br><br><br>
+    {% endfor %}
+  </div>
+  </div>
+
+</body>
+</html>
+

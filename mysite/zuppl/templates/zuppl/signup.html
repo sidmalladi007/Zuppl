@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="utf-8" /> 
+    <meta name="description" content="Sign Up">
+    {% load staticfiles %}
+    <link rel="stylesheet" type="text/css" href="{% static 'zuppl/css/bootstrap-theme.css' %}" />
+    <link rel="stylesheet" type="text/css" href="{% static 'zuppl/css/bootstrap-theme.css.map' %}" />
+    <link rel="stylesheet" type="text/css" href="{% static 'zuppl/css/bootstrap-theme.min.css' %}" />
+    <link rel="stylesheet" type="text/css" href="{% static 'zuppl/css/bootstrap.css.map' %}" />
+    <link rel="stylesheet" type="text/css" href="{% static 'zuppl/css/bootstrap.min.css' %}" />
+    <link rel="stylesheet" type="text/css" href="{% static 'zuppl/css/bootstrap.css' %}" />
+    <link rel="stylesheet" type="text/css" href="{% static 'zuppl/css/main.css' %}" />
+    <title>Sign Up</title>
+  </head>
+
+  <body>
+    <div class="container">
+        <ul class="nav nav-tabs pull-left">
+          <li><a href="{% url 'zuppl:index' %}">Zuppl</a></li>
+        </ul>
+        <ul class="nav nav-tabs pull-right">
+          {% if user.is_authenticated %}
+          <li><a href="{% url 'zuppl:trends' %}">Explore</a></li>
+          {% else %}
+          <li><a href="{% url 'zuppl:login' %}">Explore</a></li>
+          {% endif %}
+          {% if user.is_authenticated %}
+          <li><a href="{% url 'zuppl:create' %}">Create</a></li>
+          {% else %}
+          <li><a href="{% url 'zuppl:login' %}">Create</a></li>
+          {% endif %}
+          {% if user.is_authenticated %}
+          <li><a href="{% url 'zuppl:profile' %}">Profile</a></li>
+          {% else %}
+          <li><a href="{% url 'zuppl:login' %}">Profile</a></li>
+          {% endif %}
+          {% if user.is_authenticated %}
+          <li><a href="{% url 'zuppl:logout' %}">Sign Out</a></li>
+          {% else %}
+          <li><a href="{% url 'zuppl:login' %}">Sign In</a></li>
+          {% endif %}
+        </ul>
+    </div>
+
+    <div class="container">
+    {% if error_emailExists %}
+      <h1 class="login-title" align="center">Email Error</h1>
+      <h3 class="login-text" align="center">An account has already been created with this email. Please <a href="{% url 'zuppl:login' %}">log in</a> here.</h3>
+    {% elif error_usernameTaken %}
+      <h1 class="login-title" align="center">Username Already Exists</h1>
+      <h3 class="login-text" align="center">This username is already taken. Please sign up with a different username.</h3>
+    {% elif error_passwordStructure %}
+      <h1 class="login-title" align="center">Weak Password Error</h1>
+      <h3 class="login-text" align="center">Please create a password that contains at least one letter and one number.</h3>
+    {% elif error_university %}
+      <h1 class="login-title" align="center">University Selection Error</h1>
+      <h3 class="login-text" align="center">Please click on the dropdown and select a valid university.</h3>
+    {% elif incomplete_fields %}
+      <h1 class="login-title" align="center">Incomplete Fields Error</h1>
+      <h3 class="login-text" align="center">Please fill out all fields in the signup form to create an account.</h3>
+    {% elif password_mismatch %}
+      <h1 class="login-title" align="center">Password Mismatch Error</h1>
+      <h3 class="login-text" align="center">The Password field did not match with the Confirm Password field. Please reenter your signup information.</h3>
+    {% else %}
+      <h1 class="login-title" align="center">Welcome to Zuppl!</h1>
+      <h3 class="login-text" align="center">The one-stop solution to discovering and creating events just for your college campus.</h3>
+    {% endif %}
+    <br><br>
+  </div>
+
+  <div class="container">
+  <div class="row">
+    <div class="col-md-6 col-md-offset-3">
+      <div class="panel panel-login">
+        <div class="panel-heading">
+          <div class="row">
+            <div class="col-xs-6">
+              <a href="{% url 'zuppl:login' %}" id="login-form-link">Login</a>
+            </div>
+            <div class="col-xs-6">
+              <a href="{% url 'zuppl:signup' %}" class="active" id="register-form-link">Sign Up</a>
+            </div>
+          </div>
+          <hr>
+        </div>
+        <div class="panel-body">
+          <div class="row">
+            <div class="col-lg-12">
+              <form id="register-form" action="{% url 'zuppl:create-account' %}" method="post" role="form" style="display: block;">
+              {% csrf_token %}
+                <div class="form-group">
+                  <input type="text" name="firstname" id="firstname" tabindex="1" class="form-control" placeholder="First Name" value="" required>
+                </div>
+                <div class="form-group">
+                  <input type="text" name="lastname" id="lastname" tabindex="1" class="form-control" placeholder="Last Name" value="" required>
+                </div>
+                <div class="form-group">
+                  <input type="email" name="email" id="email" tabindex="1" class="form-control" placeholder="Email Address" value="" required>
+                </div>
+                <div class="form-group">
+                  <div class="mainselection">
+                  <select name="college" id="input7"  >
+                      <option value="No Option">Select Your University</option>
+                      <option value="Carnegie Mellon University">Carnegie Mellon University</option>
+                      <option value="Stanford University">Stanford University</option>
+                      <option value="MIT">MIT</option>
+                      <option value="Princeton University">Princeton University</option>
+                      <option value="Johns Hopkins University">Johns Hopkins University</option>
+                      <option value="UC Berkeley">UC Berkeley</option>
+                      <option value="UC Los Angeles">UC Los Angeles</option>
+                      <option value="UC San Diego">UC San Diego</option>
+                  </select>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <input type="text" name="username" id="username" tabindex="1" class="form-control" placeholder="Username" value="" required>
+                </div>
+                <div class="form-group">
+                  <input type="password" name="password" id="password" tabindex="2" class="form-control" placeholder="Password (with at least one letter and one number)" required>
+                </div>
+                <div class="form-group">
+                  <input type="password" name="confirm-password" id="confirm-password" tabindex="2" class="form-control" placeholder="Confirm Password" required>
+                </div>
+                <div class="form-group">
+                  <div class="row">
+                    <div class="col-sm-6 col-sm-offset-3">
+                      <input type="submit" name="register-submit" id="register-submit" tabindex="4" class="form-control btn btn-register" value="Sign Up">
+                    </div>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <div class="row">
+                    <div class="col-sm-10 col-sm-offset-1">
+                      <p align="center" style="font-size:1em;">If your university isn't listed, <a href="mailto:contact.zuppl@gmail.com?subject=Request+College&body=Hi,+my+name+is+[enter+your+name],+and+I+would+like+to+have+[enter+university+name]+added+to+Zuppl.">click here</a> to request to add it to Zuppl.</p>
+                    </div>
+                  </div>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>
